@@ -1,62 +1,42 @@
 const express = require("express");
-
+const { DataTypes } = require("sequelize");
+const { databaseConnect, sequelize } = require("./config/database-connection");
+const { User } = require("./models/users");
+const { userRouter } = require("./router/user-router");
 const app = express();
 
+//https://github.com/SantoshKumarSubedi/texas-node-may
+
 app.use(express.json());
+databaseConnect();
 
-const users = [];
-
-app.post("/", (req, res) => {
-  const { username, name, password } = req.body;
-  if (!username || !name || !password) {
-    res.json({ message: "Invalid Request Body" });
-  } else {
-    users.push({ username, name, password });
-    res.json({ message: "User Added Successfully" });
+// Logger Middleware
+app.use((req, res, next) => {
+  console.log(`Api ${req.url} Accessed At ${new Date()}`);
+  if (["POST", "PUT"].includes(req.method)) {
+    console.log(`API BODY: ${JSON.stringify(req.body)}`);
   }
+  next();
 });
 
-app.get("/", (req, res) => {
-  res.json({ message: "User Fetched Successfully.", data: users });
-});
+// Auth Middleware
+// app.use((req, res, next) => {
+//   const headers = req.headers;
+//   const token = headers["token"];
+//   if (token) {
+//     next();
+//   } else {
+//     // Allow Access For Login
+//     const url = req.url;
+//     if (["/login"].includes(url)) {
+//       next();
+//     } else {
+//       res.send("Access Denied");
+//     }
+//   }
+// });
 
-app.get("/:username", (req, res) => {
-  let { username } = req.params;
-  let responseUser;
-  for (let i = 0; i < users.length; i++) {
-    if (username == users[i].username) {
-      responseUser = users[i];
-      break;
-    }
-  }
-  if (responseUser) {
-    res.json({ message: "User Fetched Successfully", data: responseUser });
-  } else {
-    res.json({ message: "User not found" });
-  }
-});
-
-app.delete("/:username", (req, res) => {
-  let { username } = req.params;
-  let responseUser;
-  for (let i = 0; i < users.length; i++) {
-    if (username == users[i].username) {
-      users.splice(i, 1);
-      break;
-    }
-  }
-});
-
-app.put("/", (req, res) => {});
-
-app.get("/check", (req, res) => {
-  console.log("Health Check");
-  res.send({ Health: "Check" });
-});
-
-app.patch("/", (req, res) => {});
-
-app.delete("/", (req, res) => {});
+app.use(userRouter);
 
 app.listen(3000, (err) => {
   if (err) {
