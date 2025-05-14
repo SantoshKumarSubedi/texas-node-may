@@ -9,7 +9,7 @@ const databaseConnect = async () => {
   try {
     await sequelize.authenticate();
     console.log("Db Connected Successfully");
-    sequelize.sync(); // Sync Defined MOdel WIth DB
+    sequelize.sync({ alter: true }); // Sync Defined MOdel WIth DB
   } catch (err) {
     console.log(err);
   }

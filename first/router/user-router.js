@@ -5,6 +5,7 @@ const {
   getByUsername,
   updateUser,
   deleteUserByUsername,
+  login,
 } = require("../controller/user-controller");
 const userRouter = express.Router({ mergeParams: true });
 const ROUTE_PREFIX = "users";
@@ -14,5 +15,6 @@ userRouter.post(`/${ROUTE_PREFIX}`, createUser);
 userRouter.get(`/${ROUTE_PREFIX}/:username`, getByUsername);
 userRouter.put(`/${ROUTE_PREFIX}`, updateUser);
 userRouter.delete(`/${ROUTE_PREFIX}`, deleteUserByUsername);
+userRouter.post("/login", login);
 
 module.exports = { userRouter };
