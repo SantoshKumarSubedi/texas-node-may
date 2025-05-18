@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const publicURL = ["/users/login"];
+const publicURL = ["/login"];
 
 const authMiddleware = (req, res, next) => {
   const url = req.url;
@@ -13,6 +13,7 @@ const authMiddleware = (req, res, next) => {
       const jwtToken = tokens[1];
       try {
         const payload = jwt.verify(jwtToken, "SecretTOKEN");
+        req["jwt"] = payload;
         next();
       } catch (ex) {
         res.status(403);

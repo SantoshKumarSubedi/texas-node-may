@@ -17,7 +17,7 @@ databaseConnect();
 app.use(requestLogger);
 
 // Auth Middleware
-// app.use(authMiddleware);
+app.use(authMiddleware);
 
 app.use(router);
 

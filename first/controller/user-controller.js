@@ -66,7 +66,7 @@ const login = async (req, res) => {
         { userId: existingUser.id, roles },
         "SecretTOKEN",
         {
-          expiresIn: "1m",
+          expiresIn: "2h",
         }
       );
 
