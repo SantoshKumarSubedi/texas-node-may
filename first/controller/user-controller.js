@@ -2,6 +2,7 @@ const { User, UserRole, Role } = require("../models");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { sequelize } = require("../config/database-connection");
+const fs = require("fs");
 
 const createUser = async (req, res) => {
   const { username, name, password } = req.body;
@@ -79,6 +80,25 @@ const login = async (req, res) => {
   }
 };
 
+const uploadProfilePicture = async (req, res) => {
+  const { userId } = req.jwt;
+  const user = await User.findOne({ id: userId });
+  user.profile_picture = req.file.path;
+  await user.save();
+  res.json("File Upload Success");
+};
+
+const getProfilePicture = async (req, res) => {
+  const { userId } = req.jwt;
+  const user = await User.findOne({ id: userId });
+  if (user.profile_picture) {
+    const file = fs.readFileSync(user.profile_picture);
+    res.send(file);
+  } else {
+    res.send({ message: "Profile Not Uploaded" });
+  }
+};
+
 const getRolesByUserId = async (userId) => {
   const userRoles = await UserRole.findAll({ user_id: userId });
   const roles = [];
@@ -96,4 +116,6 @@ module.exports = {
   updateUser,
   deleteUserByUsername,
   login,
+  uploadProfilePicture,
+  getProfilePicture,
 };
