@@ -29,6 +29,10 @@ app.get("/about/:id", (req, res) => {
   res.render("about", { id, message });
 });
 
+app.get("/user/create", (req, res) => {
+  res.render("createuser");
+});
+
 app.listen(PORT, (err) => {
   if (err) {
     console.error("Failed to log message");
