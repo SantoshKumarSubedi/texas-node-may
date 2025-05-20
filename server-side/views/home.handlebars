@@ -1,0 +1,37 @@
+<div class="jumbotron">
+    <h1 class="display-4">{{message}}</h1>
+    <p class="lead">This is a simple demo showing various Handlebars features.</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <h2>Items List</h2>
+        {{#if items}}
+        <div class="list-group">
+            {{#each items}}
+            <div class="list-group-item">
+                <h5 class="mb-1">{{this.name}}</h5>
+                <p class="mb-1">{{this.description}}</p>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <p>No items available.</p>
+        {{/if}}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Handlebars Features</h5>
+                <ul class="list-unstyled">
+                    <li>✓ Template Inheritance</li>
+                    <li>✓ Partials Support</li>
+                    <li>✓ Conditional Logic</li>
+                    <li>✓ Loops and Iteration</li>
+                    <li>✓ Helpers Support</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
