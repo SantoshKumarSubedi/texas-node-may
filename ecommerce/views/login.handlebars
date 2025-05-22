@@ -1,0 +1,10 @@
+<form method="post",action="/login" class="bg-gray-100">
+    <label>Email</label>
+    <input type="email" name="email"/><br>
+    <label>Password</label>
+    <input type="password" name="password"/><br>
+    {{#if error}}
+    <p class="danger">{{error}}</p>
+    {{/if}}
+    <button type="submit">Submit</button>
+</form>

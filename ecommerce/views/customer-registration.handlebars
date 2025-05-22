@@ -1,0 +1,10 @@
+<form method="post",action="/registration" class="bg-gray-100">
+    <label>Name</label>
+    <input type="text" name="name"/><br>
+    <label>Email</label>
+    <input type="email" name="email"/><br>
+    {{#if error}}
+        <p>{{error}}</p>
+    {{/if}}
+    <button type="submit">Submit</button>
+</form>
