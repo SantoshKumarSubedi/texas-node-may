@@ -1,8 +1,8 @@
 <form method="post",action="/login" class="bg-gray-100">
     <label>Email</label>
-    <input type="email" name="email"/><br>
+    <input type="email" name="email" value = "user@yopmail.com"/><br>
     <label>Password</label>
-    <input type="password" name="password"/><br>
+    <input type="password" name="password" value = "Test@123"/><br>
     {{#if error}}
     <p class="danger">{{error}}</p>
     {{/if}}

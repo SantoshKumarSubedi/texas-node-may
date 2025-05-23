@@ -1,4 +1,6 @@
-const { User } = require("../models");
+const { User, Product } = require("../models");
+const { sendMail } = require("../service/node-mailer.service");
+const { productCategory } = require("./product.controller");
 
 const customerRegistration = async (req, res) => {
   const { name, email } = req.body;
@@ -11,6 +13,11 @@ const customerRegistration = async (req, res) => {
   const password = "Test@123"; //TODO Generate Random Password HEre And Hash password
   const newUser = User.build({ name, email, password, user_type: 0 });
   await newUser.save();
+  sendMail(
+    email,
+    `Your password is ${password}`,
+    "Account Create Successfully"
+  );
   res.redirect("login");
 };
 
@@ -31,7 +38,12 @@ const handleLogin = async (req, res) => {
       req.session.userId = user.id;
       req.session.isAuthenticated = true;
       req.session.save();
-      return res.redirect("/");
+      if (user.user_type == 0) {
+        return res.redirect("/");
+      } else {
+        return res.redirect("/admin/dashboard");
+      }
+
       //login Success
     } else {
       error = "Username Password don't Match";
@@ -42,10 +54,22 @@ const handleLogin = async (req, res) => {
   res.render("login", { layout: false, error });
 };
 
+const getCustomerDashboard = async (req, res) => {
+  const { userId } = req.session;
+  const user = await User.findOne({ where: { id: userId } });
+  const products = await Product.findAll({ raw: true });
+  res.render("customer/dashboard", {
+    user: { name: user.name },
+    products,
+    category: productCategory,
+    layout: "customer",
+  });
+};
+
 const getDashboard = async (req, res) => {
   const { userId } = req.session;
   const user = await User.findOne({ where: { id: userId } });
-  res.render("dashboard", { user: { name: user.name } });
+  res.render("customer/dashboard", { user: { name: user.name } });
 };
 
 const viewCustomers = async (req, res) => {
@@ -63,12 +87,20 @@ const deleteCustomers = async (req, res) => {
   res.redirect("/customer");
 };
 
+const logout = (req, res) => {
+  req.session.userId = null;
+  req.session.isAuthenticated = false;
+  res.redirect("/login");
+};
+
 module.exports = {
   customerRegistration,
   getCustomerRegistration,
   getLogin,
   handleLogin,
   getDashboard,
+  getCustomerDashboard,
   viewCustomers,
   deleteCustomers,
+  logout,
 };
